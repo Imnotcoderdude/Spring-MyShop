@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -32,11 +35,21 @@ public class ProductService {
         }
         Product product = productRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 상품을 찾을 수 없습니다. 정확한 id를 입력하세요.")
-                );
+        );
 
         product.update(requestDto);
 
         return new ProductResponseDto(product);
 
+    }
+
+    public List<ProductResponseDto> getProducts() {
+        List<Product> productList = productRepository.findAll();
+        List<ProductResponseDto> responseDtoList = new ArrayList<>();
+
+        for (Product product : productList) {
+            responseDtoList.add(new ProductResponseDto(product));
+        }
+        return responseDtoList;
     }
 }
